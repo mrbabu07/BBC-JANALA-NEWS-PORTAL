@@ -2,6 +2,8 @@
 const categoryContainer = document.getElementById("categoryContainer");
 const newsContainer = document.getElementById("newsContainer");
 const bookmarkContainer = document.getElementById("bookmarkContainer");
+const bookmarkCount = document.getElementById("BookmarkCount")
+
 let bookmarks = [];
 
 // Load categories
@@ -79,7 +81,10 @@ const handleBookmarks = (e) => {
 
   bookmarks.push({ title, id });
   showBookmarks(bookmarks);
+  
 };
+
+
 
 // Show bookmarks
 const showBookmarks = (bookmarks) => {
@@ -94,6 +99,7 @@ const showBookmarks = (bookmarks) => {
       </div>
     `;
   });
+  bookmarkCount.innerText=bookmarks.length
 };
 
 const handleDeleteBookmark = (bookmarkId) => {
