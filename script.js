@@ -90,10 +90,20 @@ const showBookmarks = (bookmarks) => {
     bookmarkList.innerHTML += `
       <div class="p-2 border-b">
         <h1 class="text-sm font-medium">${bookmark.title}</h1>
+        <button onclick="handleDeleteBookmark('${bookmark.id}')" class="btn btn-xs">Delete</button>
       </div>
     `;
   });
 };
+
+const handleDeleteBookmark = (bookmarkId) => {
+  // Remove the bookmark from the array
+  bookmarks = bookmarks.filter(bookmark => bookmark.id !== bookmarkId);
+
+  // Re-render the bookmark list
+  showBookmarks(bookmarks);
+};
+
 
 // Initial load
 loadCategory();
