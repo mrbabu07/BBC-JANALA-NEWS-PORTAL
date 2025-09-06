@@ -38,11 +38,22 @@
         </nav>
     </header>
 
-        <main class="max-w-7xl mx-auto px-5 mt-5">
-            <div class="grid grid-cols-4 gap-5" id="newsContainer">
+        <main class="max-w-7xl mx-auto px-5 mt-5 grid grid-cols-4 gap-5">
+  <!-- News Section -->
+  <div class="grid grid-cols-3 gap-5 col-span-3" 
+  id="newsContainer"></div>
 
-            </div>
-        </main>
+  <!-- Bookmark Section -->
+  <div id="bookmarkContainer" class="col-span-1 border
+   border-gray-300 rounded-lg overflow-hidden">
+    
+     <div class="bg-red-500 text-white p-3">
+      <h1>Bookmark</h1>
+    <!-- Bookmarked items will load here -->
+     </div> 
+  </div>
+</main>
+
 
 
     <script src="script.js"></script>
