@@ -1,68 +1,62 @@
-// promise > pending, resolve(success), rejected(error)
-
+// DOM elements
 const categoryContainer = document.getElementById("categoryContainer");
 const newsContainer = document.getElementById("newsContainer");
-const bookmarkContainer = document.getElementById("bookmarkContainer")
-let bookmarks = []
+const bookmarkContainer = document.getElementById("bookmarkContainer");
+let bookmarks = [];
 
+// Load categories
 const loadCategory = () => {
-  fetch("https://news-api-fs.vercel.app/api/categories") //promise
-    .then((res) => res.json()) //res
+  fetch("https://news-api-fs.vercel.app/api/categories")
+    .then((res) => res.json())
     .then((data) => {
-      console.log(data.categories);
-      const categories = data.categories;
-      showCategory(categories);
+      showCategory(data.categories);
     })
-
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 };
 
+// Show categories
 const showCategory = (categories) => {
   categories.forEach((cat) => {
-    categoryContainer.innerHTML += `<li id="${cat.id}" class="hover:border-b-4 hover:border-red-600 border-red-600 cursor-pointer">${cat.title}</li>`;
+    categoryContainer.innerHTML += `
+      <li id="${cat.id}" class="hover:border-b-4 hover:border-red-600 border-red-600 cursor-pointer">
+        ${cat.title}
+      </li>
+    `;
   });
+
   categoryContainer.addEventListener("click", (e) => {
-    const allLi = document.querySelectorAll("li");
-    allLi.forEach((li) => {
-      li.classList.remove("border-b-4");
-    });
+    const allLi = categoryContainer.querySelectorAll("li");
+    allLi.forEach((li) => li.classList.remove("border-b-4"));
     if (e.target.localName === "li") {
-      //   console.log(e.target.id);
       e.target.classList.add("border-b-4");
       loadNewsByCategory(e.target.id);
     }
   });
 };
 
+// Load news by category
 const loadNewsByCategory = (categoryId) => {
   fetch(`https://news-api-fs.vercel.app/api/categories/${categoryId}`)
     .then((res) => res.json())
-    .then((data) => {
-      //   console.log(data.articles);
-      showNewsByCategory(data.articles);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .then((data) => showNewsByCategory(data.articles))
+    .catch((err) => console.log(err));
 };
 
+// Show news
 const showNewsByCategory = (articles) => {
-  // clear previous news
-  newsContainer.innerHTML = "";
+  newsContainer.innerHTML = ""; // clear previous news
 
-  articles.forEach((article, index) => {
+  articles.forEach((article) => {
     newsContainer.innerHTML += `
       <div class="border rounded-lg p-3 mb-3">
         <div>
-          <img src="${article.image?.srcset?.[5]?.url || ''}" 
+          <img src="${article.image?.srcset?.[5]?.url || ""}" 
                alt="news image" 
                class="w-full h-48 object-cover mb-2" />
         </div>
         <div id="${article.id}" class="p-2">
           <h1 class="text-lg font-extrabold">${article.title}</h1>
-          <p class="text-sm">${article.time}</p>
+          <p class="text-sm">${article.time || ""}</p>
           
           <button class="btn text-sm mt-5">Bookmark</button>
         </div>
@@ -71,26 +65,36 @@ const showNewsByCategory = (articles) => {
   });
 };
 
-newsContainer.addEventListener("click", (e) =>{
-  // console.log(e.target)
-  //  console.log(e.target.innerText)
-  if(e.target.innerText === 'Bookmark'){
-    handleBookmarks(e)
+// Handle bookmark click
+newsContainer.addEventListener("click", (e) => {
+  if (e.target.innerText === "Bookmark") {
+    handleBookmarks(e);
   }
-    
-})
+});
 
 const handleBookmarks = (e) => {
-  const title = e.target.parentNode.children[0].innerText
-    const id = e.target.parentNode.id
-    
-    bookmarks.push({
-      title: title,
-      id: id
-    })
-    console.log(bookmarks)
-  }
+  const parent = e.target.parentNode;
+  const title = parent.querySelector("h1").innerText;
+  const id = parent.id;
 
+  bookmarks.push({ title, id });
+  showBookmarks(bookmarks);
+};
 
+// Show bookmarks
+const showBookmarks = (bookmarks) => {
+  const bookmarkList = document.getElementById("bookmarkList"); // separate container
+  bookmarkList.innerHTML = ""; // clear old bookmarks
+
+  bookmarks.forEach((bookmark) => {
+    bookmarkList.innerHTML += `
+      <div class="p-2 border-b">
+        <h1 class="text-sm font-medium">${bookmark.title}</h1>
+      </div>
+    `;
+  });
+};
+
+// Initial load
 loadCategory();
-loadNewsByCategory("main")
+loadNewsByCategory("main");
